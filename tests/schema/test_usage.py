@@ -13,32 +13,32 @@ from monde.schema import (
 
 @pytest.mark.parametrize(
     "schema, datapath", [
-        (
-            "example/FinancialSample.xlsx",
-            "./data/FinancialSample.xlsx",
-        ),
+        ("example/FinancialSample.xlsx", "FinancialSample.xlsx"),
     ]
 )
-def test_builders(assets, registry, subtests, schema: str, datapath: str):
+def test_builders(data, registry, subtests, schema: str, datapath: str):
     # fmt:off
     definition = registry.get(schema)
-    data = pd.read_excel(
-        str(assets.joinpath(datapath)),
+    X = pd.read_excel(
+        str(data.joinpath(datapath)),
         names=definition.names,
         dtype=definition.dtype,
         header=0,
     )
     
     with subtests.test(msg="pandera"):
-        Schema = DataFrameSchemaBuilder.build(schema, coerce=True)
-        Schema.validate(data)
+        Schema = DataFrameSchemaBuilder.build(definition, coerce=True)
+        Schema.validate(X)
 
     with subtests.test(msg="pydantic"):
-        Model = TypeAdapter(list[ModelBuilder.build(schema)])  # type: ignore
-        Model.validate_json(data.to_json(orient="records", date_format="iso"))
+        Model = TypeAdapter(list[ModelBuilder.build(definition)])  # type: ignore
+        Model.validate_json(X.to_json(orient="records", date_format="iso"))
 
     with subtests.test(msg="sqlalchemy"):
-        Table = TableBuilder.build(schema, "test_table", sql.MetaData(schema="test"))
-        for row in data.to_dict(orient="records"):
+        Table = TableBuilder.build(
+            definition, "test_table", sql.MetaData(schema="test")
+        )
+
+        for row in X.to_dict(orient="records"):
             assert set(row.keys()) == set(Table.columns.keys())
     # fmt:on

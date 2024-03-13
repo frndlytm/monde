@@ -14,5 +14,5 @@ def cwd(here):
 
 
 @pytest.fixture
-def assets(here):
-    return here.joinpath("assets")
+def data(here):
+    return here.joinpath("data")

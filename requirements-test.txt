@@ -1,5 +1,6 @@
 # Build
 invoke
+build
 setuptools
 wheel
 
@@ -10,6 +11,7 @@ flake8
 flake8-bugbear
 isort
 mypy
+types-pyyaml
 
 # Test
 coverage

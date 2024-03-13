@@ -1,10 +1,10 @@
 from functools import partial
 from typing import Callable
 
-from monde.schema import models
+from monde.schema import spec
 from monde.schema.io import xlsx, yaml
 
-IReader = Callable[..., models.SchemaModel]
+IReader = Callable[..., spec.SchemaModel]
 
 
 def reader(type_: str, **storage_options) -> IReader:

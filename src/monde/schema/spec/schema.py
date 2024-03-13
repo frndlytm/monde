@@ -170,14 +170,14 @@ class SchemaModel(pydantic.BaseModel):
         default_factory=list,
         description="The ``SchemaFieldModels`` that define how to type-coerce fields.",
     )
-    checks: List[Check] = pydantic.Field(
+    checks: List[CheckModel] = pydantic.Field(
         default_factory=list,
         description=(
             "Special ``Checks`` that run on specific fields in specific places of "
             "the processing pipeline."
         ),
     )
-    constraints: List[Constraint] = pydantic.Field(
+    constraints: List[ConstraintModel] = pydantic.Field(
         default_factory=list,
         description=(
             "Special ``Constraints`` that run on the entire dataset after processing "

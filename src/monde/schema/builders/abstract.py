@@ -15,12 +15,12 @@ class IBuilder(abc.ABC, Generic[P]):
 
     @classmethod
     @abc.abstractmethod
-    def build_constraint(cls, field: spec.schema.Constraint) -> type:
+    def build_constraint(cls, field: spec.schema.ConstraintModel) -> type:
         raise NotImplementedError()
 
     @classmethod
     @abc.abstractmethod
-    def build_check(cls, field: spec.schema.Check) -> type:
+    def build_check(cls, field: spec.schema.CheckModel) -> type:
         raise NotImplementedError()
 
     @classmethod

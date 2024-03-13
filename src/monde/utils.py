@@ -1,9 +1,9 @@
-import datetime
 import functools
 import json
 import logging
 import traceback
 import time
+from datetime import datetime
 from typing import Iterator
 
 import numpy as np
@@ -40,7 +40,7 @@ class chunk_statistics:
         logger: logging.Logger = logging.getLogger(),
     ):
         self.chunk = chunk
-        self.last_observed = datetime.datetime.now()
+        self.last_observed = datetime.now()
         self.logger = logger
 
     def __enter__(self):
@@ -64,7 +64,7 @@ class chunk_statistics:
 
     def observe(self):
         # OBSERVE
-        now = datetime.datetime.now()
+        now = datetime.now()
         stats = {
             "type": "ChunkStatistics",
             "start": self.last_observed.isoformat(),

@@ -6,9 +6,9 @@ from monde.schema.spec import SchemaModel
 
 @pytest.mark.parametrize(
     "type_, schemapath", [
-        ("xlsx", "./schemas/FinancialSample.xlsx"),
+        ("xlsx", "example/FinancialSample.xlsx"),
     ]
 )
-def test_read(assets, type_: str, schemapath: str):
-    schema = reader(type_)(str(assets.joinpath(schemapath)))
+def test_read(cwd, type_: str, schemapath: str):
+    schema = reader(type_)(str(cwd.joinpath("schemas", schemapath)))
     assert isinstance(schema, SchemaModel)

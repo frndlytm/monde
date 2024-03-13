@@ -49,7 +49,7 @@ class TableBuilder(IBuilder[sql.Table]):
         )
 
     @classmethod
-    def build_constraint(cls, constraint: spec.schema.Constraint) -> sql.Constraint:
+    def build_constraint(cls, constraint: spec.schema.ConstraintModel) -> sql.Constraint:
         if constraint.type_ == "index":
             return sql.Index(constraint.name, *constraint.fields)
         elif constraint.type_ == "primary_key":
