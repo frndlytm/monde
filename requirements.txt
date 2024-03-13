@@ -1,0 +1,11 @@
+# Package
+babel
+numpy
+pandas[excel,pyarrow]
+pandera
+pydantic
+pyyaml
+pyyaml-types
+s3fs
+scikit-image
+scikit-learn
