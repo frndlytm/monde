@@ -9,3 +9,4 @@ pyyaml-types
 s3fs
 scikit-image
 scikit-learn
+sqlalchemy
