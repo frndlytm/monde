@@ -76,7 +76,7 @@ class SubframeExtractor(abstract.Transform):
 
         return largest_i
 
-    def fit(self, X: pd.DataFrame, y=None, **fit_params) -> "SubframeExtractor":
+    def fit(self, X: pd.DataFrame, y=None, **fit_params) -> "SubframeExtractor":  # type: ignore
         # Use NULL masking and contiguous image search to
         # get bounding box regions. Take the last (or first).
         larr = label(np.array(X.notnull()).astype("int"))

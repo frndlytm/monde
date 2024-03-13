@@ -29,7 +29,7 @@ class CleanBooleans(abstract.Transform, mixins.SchemaDriven):
     TRUTHY = ["TRUE", "T", "YES", "Y"]  # True
     FALSEY = ["FALSE", "F", "NO", "N"]  # False
     UNKNOWN = ["NA", "N/A", "NULL", "NONE", "(BLANK)", "U", "UNKNOWN", ""]  # pd.NA
-    
+
     @utils.timed
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         selection = self.meta.select_dtypes(include="boolean")

@@ -47,7 +47,7 @@ def test_EasyPreprocess(data, schema):
 
     X = data.rename(columns=columns).pipe(transform).pipe(schema.validate)
     strings = X.select_dtypes(include="object")
-    
+
     for column in strings:
         assert (~X[column].str.startswith(" ")).all()
         assert (~X[column].str.endswith(" ")).all()

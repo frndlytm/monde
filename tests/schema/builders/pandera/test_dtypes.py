@@ -1,7 +1,7 @@
 import pandas as pd
 import pandera as pa
 
-from monde.schema.builders.pandera import Currency, LiteralBool, SSN, ZipCode
+from monde.schema.builders.pandera import SSN, Currency, LiteralBool, ZipCode
 
 
 def test_Currency():
@@ -13,14 +13,16 @@ def test_Currency():
 
     valid = Schema.validate(data)
     assert valid.iloc[0, 0] == -12.50
-    
+
 
 def test_LiteralBool():
-    data = pd.DataFrame({
-        "truthy": [True, "Y", "yes", "YES", "YeS", "T", "True"],
-        "falsey": [False, "N", "no", "NO", "nO", "F", "False"],
-        "unknown": [pd.NA, "(blank)", "U", "None", "NULL", "null", None],
-    })
+    data = pd.DataFrame(
+        {
+            "truthy": [True, "Y", "yes", "YES", "YeS", "T", "True"],
+            "falsey": [False, "N", "no", "NO", "nO", "F", "False"],
+            "unknown": [pd.NA, "(blank)", "U", "None", "NULL", "null", None],
+        }
+    )
 
     Schema = pa.DataFrameSchema(
         columns={
@@ -32,7 +34,7 @@ def test_LiteralBool():
     )
 
     valid = Schema.validate(data, lazy=True)
-    
+
     assert valid.truthy.all()
     assert not valid.falsey.all()
     assert valid.unknown.apply(pd.isnull).all()
@@ -47,8 +49,10 @@ def test_SSN():
     )
 
     valid = Schema.validate(data, lazy=True)
-    
-    assert (valid.member_ssn == pd.Series(["000000012", "000000012", "123456789"])).all()
+
+    assert (
+        valid.member_ssn == pd.Series(["000000012", "000000012", "123456789"])
+    ).all()
 
 
 def test_ZipCode():
@@ -60,5 +64,5 @@ def test_ZipCode():
     )
 
     valid = Schema.validate(data, lazy=True)
-    
+
     assert (valid.member_zipcode == pd.Series(["02128", "00000", "12345"])).all()

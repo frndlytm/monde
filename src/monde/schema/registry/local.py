@@ -3,9 +3,9 @@ from functools import lru_cache
 from typing import Iterable
 
 from monde.schema import io
-from monde.schema.spec import SchemaModel
 from monde.schema.registry.abstract import ISchemaRegistry
 from monde.schema.registry.exceptions import RegistryKeyError
+from monde.schema.spec import SchemaModel
 
 
 class LocalSchemaRegistry(ISchemaRegistry):
@@ -19,17 +19,18 @@ class LocalSchemaRegistry(ISchemaRegistry):
 
     Arguments
     ---------
-    
+
         ``root``:
             The root directory form which we rglob schema file.
 
         ``suffix``:
             The suffix of the files to rglob, controls which reader to use.
 
-        ``storage_options``:        
+        ``storage_options``:
             Extra file-system options for the reader. (See fsspec and s3fs).
-    
+
     """
+
     # fmt:off
     def __init__(
         self,
@@ -38,7 +39,7 @@ class LocalSchemaRegistry(ISchemaRegistry):
         **storage_options
     ):
         super().__init__(reader=io.reader(suffix, **storage_options))
-        
+
         self.root = pathlib.Path(root)
         self.suffix = suffix
 

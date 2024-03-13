@@ -17,11 +17,11 @@ def read_metadata(filepath: str) -> Dict[str, Any]:
         .T.to_dict(orient="records")[0]
     )
     # fmt:on
-    
+
     # Pop the required props
     name = metadata.pop("name")
     namespace = metadata.pop("namespace")
-    
+
     # Everything else is a schemaless ``metadata`` prop.
     return {
         "name": name,
@@ -33,7 +33,7 @@ def read_metadata(filepath: str) -> Dict[str, Any]:
 def read_constraints(filepath: str) -> List[Dict[str, Any]]:
     # Read the constraints sheet
     # fmt:off
-    return (
+    return (  # type: ignore
         pd.read_excel(
             filepath, sheet_name="constraints", header=0,
             converters={"kwargs": json.loads},
@@ -79,7 +79,7 @@ def read_fields(filepath: str) -> List[Dict[str, Any]]:
         .set_index("name", drop=False)
         .to_dict(orient="records")
     )
-    
+
     return list(map(utils.drop_nulls, fields))
     # fmt:on
 

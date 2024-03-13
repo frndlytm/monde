@@ -7,6 +7,7 @@ Implement the IBuilder Interface so we can export this class to the root
 of the project.
 
 """
+
 from typing import Optional, Type, Union
 
 import babel.numbers
@@ -18,7 +19,6 @@ from pandera.engines.type_aliases import PandasObject
 
 from monde.schema import spec
 from monde.schema.builders.abstract import IBuilder
-
 
 """
 Custom pandera.DataTypes
@@ -40,7 +40,7 @@ class LiteralBool(pandas_engine.BOOL):
     truthy = ["TRUE", "T", "YES", "Y"]  # True
     falsey = ["FALSE", "F", "NO", "N"]  # False
     unknown = ["NA", "NULL", "NONE", "(BLANK)", "U", "UNKNOWN", ""]  # pd.NA
-    
+
     def coerce(self, series: pd.Series) -> pd.Series:
         """Coerce a pandas.Series to boolean types."""
         if pd.api.types.is_object_dtype(series):
@@ -106,10 +106,11 @@ class DataFrameSchemaBuilder(IBuilder[pa.DataFrameSchema]):
     """
     ``PanderaSchema``
     =================
-    
+
     Implements the IBuilder[pa.DataFrameSchema] interface.
 
     """
+
     @classmethod
     def build_dtype(cls, field: spec.SchemaFieldModel) -> PanderaDtype:  # type: ignore
         # fmt:off
@@ -145,11 +146,11 @@ class DataFrameSchemaBuilder(IBuilder[pa.DataFrameSchema]):
                 "end": field.end,
                 "length": field.length,
                 "protect": field.protect,
-            }
+            },
         )
 
     @classmethod
-    def build(cls, schema: spec.SchemaModel, *args, **kwargs) -> pa.DataFrameSchema:
+    def build(cls, schema: spec.SchemaModel, **kwargs) -> pa.DataFrameSchema:
         # BUILD a field for each field in the schema...
         fields = {field.name: cls.build_field(field) for field in schema.fields}
 
@@ -158,7 +159,6 @@ class DataFrameSchemaBuilder(IBuilder[pa.DataFrameSchema]):
             columns=fields,
             name=schema.name,
             metadata=schema.metadata,
-            *args,
             **kwargs,
         )
 

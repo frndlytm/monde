@@ -8,8 +8,7 @@ import pandas as pd
 import pandera as pa
 import pandera.errors
 
-from monde.transform import mixins
-from monde.transform import abstract
+from monde.transform import abstract, mixins
 
 
 # fmt:off
@@ -164,15 +163,13 @@ class Validator(abstract.Transform, mixins.SchemaDriven):
     @property
     def extra_column_errors(self):
         return self.errors.query(
-            "schema_context == 'DataFrameSchema'"
-            " and check == 'column_in_dataframe'"
+            "schema_context == 'DataFrameSchema'" " and check == 'column_in_dataframe'"
         )
 
     @property
     def missing_column_errors(self):
         return self.errors.query(
-            "schema_context == 'DataFrameSchema'"
-            " and check == 'column_in_schema'"
+            "schema_context == 'DataFrameSchema'" " and check == 'column_in_schema'"
         )
 
     def fit_transform(self, X: pd.DataFrame, y=None, **fit_params) -> pd.DataFrame:
@@ -191,7 +188,7 @@ class Validator(abstract.Transform, mixins.SchemaDriven):
             # Cache the error cases
             self.errors = e.failure_cases
             self.error_handler(e)
-            
+
         # TRANSFORM
         return (
             # Remove invalid rows from the input

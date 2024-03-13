@@ -5,9 +5,9 @@ from typing import Iterable
 import s3fs
 
 from monde.schema import io
-from monde.schema.spec import SchemaModel
 from monde.schema.registry.abstract import ISchemaRegistry
 from monde.schema.registry.exceptions import RegistryKeyError
+from monde.schema.spec import SchemaModel
 
 
 class S3SchemaRegistry(ISchemaRegistry):
@@ -20,7 +20,7 @@ class S3SchemaRegistry(ISchemaRegistry):
 
     Arguments
     ---------
-    
+
         ``bucket``:
             The S3 bucket containing the schema files.
 
@@ -34,10 +34,11 @@ class S3SchemaRegistry(ISchemaRegistry):
         ``suffix``:
             The suffix of the files to rglob, controls which reader to use.
 
-        ``storage_options``:        
+        ``storage_options``:
             Extra file-system options for the reader. (See fsspec and s3fs).
-    
+
     """
+
     # fmt:off
     def __init__(
         self,

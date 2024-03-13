@@ -5,7 +5,7 @@ from monde import utils
 from monde.transform import abstract, mixins, protected, simple
 from monde.transform.validator import Validator
 
-__all__ = ["EasyPreprocess", "EasyValidate", "TransformerPipeline"]
+__all__ = ["EasyPreprocess", "EasyValidate", "Pipeline"]
 
 
 class Pipeline(abstract.Transform):
@@ -70,15 +70,17 @@ class EasyPreprocess(Pipeline, mixins.SchemaDriven):
     transforms. Using the schema, it detects string columns that should be a
     different type and coerces them.
     """
+
     def __init__(self, schema: pa.DataFrameSchema):
         mixins.SchemaDriven.__init__(self, schema)
         Pipeline.__init__(
-            self, *(
+            self,
+            *(
                 ("clean_strings", simple.CleanStrings(schema)),
                 ("clean_booleans", simple.CleanBooleans(schema)),
                 ("clean_integers", simple.CleanIntegers(schema)),
                 ("clean_floats", simple.CleanFloats(schema)),
-            )
+            ),
         )
 
 
@@ -87,15 +89,17 @@ class EasyValidate(Pipeline, mixins.SchemaDriven):
     EasyValidate is a pipeline that RenameAliases, EasyPreprocesses and Validates
     the data, with optional HashProtectedAttributes.
     """
+
     def __init__(self, schema: pa.DataFrameSchema, protect: bool = False, **kwargs):
         mixins.SchemaDriven.__init__(self, schema)
         Pipeline.__init__(
-            self, *(
+            self,
+            *(
                 ("rename", simple.RenameAliases(schema)),
                 ("preprocess", EasyPreprocess(schema)),
                 # ("optimize", MemoryOptimizer(schema)),
                 ("validate", Validator(schema, **kwargs)),
-            )
+            ),
         )
         # fmt:off
         if protect: self.add_step("protect", protected.HashProtectedAttributes(schema))

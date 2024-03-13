@@ -7,4 +7,3 @@ def test_LocalSchemaRegistry(cwd):
     for key in list(registry):
         assert (schema := registry.get(key))
         assert isinstance(schema, SchemaModel)
-    

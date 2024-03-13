@@ -1,5 +1,4 @@
 import abc
-
 from typing import Generic, TypeVar
 
 from monde.schema import spec
@@ -10,17 +9,17 @@ P = TypeVar("P")
 class IBuilder(abc.ABC, Generic[P]):
     @classmethod
     @abc.abstractmethod
-    def build_dtype(cls, field: spec.field.SchemaFieldModel) -> type:
+    def build_dtype(cls, field: spec.field.SchemaFieldModel):
         raise NotImplementedError()
 
     @classmethod
     @abc.abstractmethod
-    def build_constraint(cls, field: spec.schema.ConstraintModel) -> type:
+    def build_constraint(cls, field: spec.schema.ConstraintModel):
         raise NotImplementedError()
 
     @classmethod
     @abc.abstractmethod
-    def build_check(cls, field: spec.schema.CheckModel) -> type:
+    def build_check(cls, field: spec.schema.CheckModel):
         raise NotImplementedError()
 
     @classmethod

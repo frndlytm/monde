@@ -1,13 +1,6 @@
 from monde.transform.memory import MemoryOptimizer
-from monde.transform.pipeline import (
-    EasyPreprocess,
-    EasyValidate,
-    Pipeline,
-)
-from monde.transform.protected import (
-    HashProtectedAttributes,
-    MaskProtectedAttributes,
-)
+from monde.transform.pipeline import EasyPreprocess, EasyValidate, Pipeline
+from monde.transform.protected import HashProtectedAttributes, MaskProtectedAttributes
 from monde.transform.simple import (
     CleanBooleans,
     CleanFloats,

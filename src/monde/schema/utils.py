@@ -4,7 +4,8 @@ import re
 
 def drop_nulls(d: dict) -> dict:
     return {
-        k: v for k, v in d.items()
+        k: v
+        for k, v in d.items()
         if not ((isinstance(v, float) and math.isnan(v)) or v is None)
     }
 

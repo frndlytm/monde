@@ -56,7 +56,7 @@ def test_validate_calendar_with_Validator(
 ):
     validator = Validator(schema, error_handler=noop)
     valids = validator.fit_transform(calendar)
-    checks = (valids == calendar)
+    checks = valids == calendar
     assert checks.to_numpy().all()
 
 

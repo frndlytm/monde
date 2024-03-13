@@ -1,20 +1,16 @@
 import pandas as pd
 import pytest
 import sqlalchemy as sql
-
 from pydantic import TypeAdapter
 
-from monde.schema import (
-    DataFrameSchemaBuilder,
-    ModelBuilder,
-    TableBuilder,
-)
+from monde.schema import DataFrameSchemaBuilder, ModelBuilder, TableBuilder
 
 
 @pytest.mark.parametrize(
-    "schema, datapath", [
+    "schema, datapath",
+    [
         ("example/FinancialSample.xlsx", "FinancialSample.xlsx"),
-    ]
+    ],
 )
 def test_builders(data, registry, subtests, schema: str, datapath: str):
     # fmt:off
@@ -25,7 +21,7 @@ def test_builders(data, registry, subtests, schema: str, datapath: str):
         dtype=definition.dtype,
         header=0,
     )
-    
+
     with subtests.test(msg="pandera"):
         Schema = DataFrameSchemaBuilder.build(definition, coerce=True)
         Schema.validate(X)

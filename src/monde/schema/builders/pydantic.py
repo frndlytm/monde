@@ -1,4 +1,3 @@
-
 import sys
 from functools import partial, singledispatchmethod
 from typing import Optional, Set, Type, TypeVar, Union
@@ -90,21 +89,21 @@ def rounded(
     return x
 
 
-def oneOf(x: Optional[str], symbols: Set[str] = set()) -> Optional[str]:
+def oneOf(x: Optional[str], symbols: tuple[str] = ()) -> Optional[str]:  # type: ignore
     # fmt:off
     if x is None: return x
     # fmt:on
-    
+
     if x not in symbols:
         raise ValueError(f"'{x}' is not one of {symbols}.")
-    
+
     return x
 
 
 class ModelBuilder(IBuilder[Type[pydantic.BaseModel]]):
     @singledispatchmethod
     @classmethod
-    def build_dtype(cls, _: spec.field.SchemaFieldModel) -> type: # type: ignore
+    def build_dtype(cls, _: spec.field.SchemaFieldModel) -> type:  # type: ignore
         return object
 
     @build_dtype.register
@@ -130,9 +129,7 @@ class ModelBuilder(IBuilder[Type[pydantic.BaseModel]]):
             field.get_python_type(),
             pydantic.BeforeValidator(
                 lambda x: (
-                    (int(x.strip().lstrip("0")) or 0)
-                    if isinstance(x, str)
-                    else x
+                    (int(x.strip().lstrip("0")) or 0) if isinstance(x, str) else x
                 )
             ),
         ]
@@ -168,8 +165,10 @@ class ModelBuilder(IBuilder[Type[pydantic.BaseModel]]):
         ]
 
     @classmethod
-    def build_field(cls, field: spec.field.SchemaFieldModel) -> pydantic.fields.FieldInfo:
-        return pydantic.Field(
+    def build_field(
+        cls, field: spec.field.SchemaFieldModel
+    ) -> pydantic.fields.FieldInfo:
+        return pydantic.Field(  # type:ignore
             default=field.default or (... if field.required else None),
             alias=pydantic.AliasChoices(field.title, *field.aliases),  # type: ignore
             serialization_alias=field.name,
@@ -178,16 +177,18 @@ class ModelBuilder(IBuilder[Type[pydantic.BaseModel]]):
         )
 
     @classmethod
-    def build(cls, schema: spec.SchemaModel, *args, **kwargs) -> Type[pydantic.BaseModel]:
+    def build(
+        cls, schema: spec.SchemaModel, *args, **kwargs
+    ) -> Type[pydantic.BaseModel]:
         # Make a pydantic.SchemaField and its type annotation
         __fields__ = {
             field.name: (
                 (
-                    Optional[cls.build_dtype(field)] 
+                    Optional[cls.build_dtype(field)]
                     if field.nullable
                     else cls.build_dtype(field)
-                ), 
-                cls.build_field(field)
+                ),
+                cls.build_field(field),
             )
             for field in schema.fields
         }

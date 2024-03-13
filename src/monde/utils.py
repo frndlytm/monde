@@ -1,8 +1,8 @@
 import functools
 import json
 import logging
-import traceback
 import time
+import traceback
 from datetime import datetime
 from typing import Iterator
 
@@ -18,7 +18,7 @@ def timed(f):
         start = time.time()
         result = f(*args, **kwargs)
         stop = time.time()
-        
+
         obs = {
             "type": "Timed",
             "name": f"{f.__module__}.{f.__qualname__}",

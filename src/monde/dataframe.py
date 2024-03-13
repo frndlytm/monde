@@ -1,3 +1,5 @@
+import csv
+import io
 from typing import Optional, Tuple, Union
 
 import numpy as np
@@ -16,15 +18,11 @@ def empty(schema: pa.DataFrameSchema, size: int = 0) -> pd.DataFrame:
     columns = index + list(schema.columns or {})
     data = np.empty((size, len(columns)))
 
-    return (
-        pd.DataFrame(data=data, columns=columns)
-        .astype(
-            {
-                column_name: column_type.dtype.type.name
-                for column_name, column_type in schema.columns.items()
-            }
-        )
-        
+    return pd.DataFrame(data=data, columns=columns).astype(
+        {
+            column_name: column_type.dtype.type.name
+            for column_name, column_type in schema.columns.items()
+        }
     )
 
 
@@ -46,7 +44,7 @@ def postgres_bulk_copy(table, conn, keys, data_iter):
     # gets a DBAPI connection that can provide a cursor
     with conn.connection.cursor() as cursor:
         # Write the CSV to s string buffer to be used as COPY STDIN
-        s_buf = StringIO()
+        s_buf = io.StringIO()
         writer = csv.writer(s_buf)
         writer.writerows(data_iter)
         s_buf.seek(0)

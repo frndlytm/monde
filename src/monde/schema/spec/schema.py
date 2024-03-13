@@ -12,14 +12,14 @@ and ``Constraints``.
 A ``Schema`` can contain additional metadata.
 
 """
+
 import json
 import string
-
 from typing import Any, Dict, Iterable, List, Literal, Optional, Set, Tuple
 
 import pydantic
 
-from .field import SchemaFieldModel, SchemaField
+from .field import SchemaField, SchemaFieldModel
 
 __all__ = ["Schema"]
 
@@ -35,12 +35,13 @@ class CheckModel(pydantic.BaseModel):
     validation and type coercion in a given validation pipeline.
 
     """
+
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     """
     Properties
     ----------
-    
+
     ``name``:
         The name of the Check to uniquely identify validation errors.
 
@@ -51,15 +52,15 @@ class CheckModel(pydantic.BaseModel):
         The processing order of the Check, i.e. before, after, or wrapped
         around the rest of type validation.
 
-    ``kwargs``:        
+    ``kwargs``:
         A mapping containing fixed kwargs for the check. See also
         https://docs.python.org/3/library/functools.html#functools.partial
     )
-    
+
     """
     name: str = pydantic.Field(
         default=...,
-        description="The name of the Check to uniquely identify validation errors."
+        description="The name of the Check to uniquely identify validation errors.",
     )
     field: str = pydantic.Field(
         default=...,
@@ -79,11 +80,13 @@ class CheckModel(pydantic.BaseModel):
             "https://docs.python.org/3/library/functools.html#functools.partial"
         ),
     )
-    
+
     @pydantic.field_validator("kwargs")
     @classmethod
     def coerce_kwargs(cls, kwargs: str) -> Dict[str, Any]:
-        return json.loads(kwargs)
+        kwargs = json.loads(kwargs)
+        assert isinstance(kwargs, dict)
+        return kwargs
 
 
 ConstraintType = Literal["index", "primary_key", "unique"]
@@ -96,11 +99,12 @@ class ConstraintModel(pydantic.BaseModel):
 
     A ``Constraint`` is a named validation step that occurs after value
     validation and type coercion.
-    
-    A ``Constraint`` checks 
+
+    A ``Constraint`` checks
 
     """
-    model_config= pydantic.ConfigDict(populate_by_name=True)
+
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
     name: str = pydantic.Field(
         default=...,
@@ -112,7 +116,7 @@ class ConstraintModel(pydantic.BaseModel):
         description=(
             "The type of constraint to apply specifically within the file "
             "(one of 'index', 'primary_key', 'unique')."
-        )
+        ),
     )
     fields: Set[str] = pydantic.Field(
         default_factory=set,
@@ -129,9 +133,10 @@ class SchemaModel(pydantic.BaseModel):
     ``Constraints``.
 
     A ``Schema`` can contain additional metadata.
-    
+
     """
-    model_config= pydantic.ConfigDict(arbitrary_types_allowed=True)
+
+    model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
 
     """
     Properties
@@ -193,6 +198,7 @@ class SchemaModel(pydantic.BaseModel):
     Computed
     --------
     """
+
     @property
     def names(self) -> List[str]:
         """
@@ -213,7 +219,7 @@ class SchemaModel(pydantic.BaseModel):
 
         """
         return {field.name: field.get_pandas_safe_type() for field in self.fields}
-    
+
     @property
     def colspecs(self) -> List[Tuple[Optional[int], Optional[int]]]:
         """
@@ -228,6 +234,7 @@ class SchemaModel(pydantic.BaseModel):
     Validators
     ----------
     """
+
     @pydantic.field_validator("fields", mode="before")
     @classmethod
     def coerce_fields(cls, fields: List[Dict[str, Any]]) -> List[SchemaFieldModel]:
@@ -238,7 +245,7 @@ class SchemaModel(pydantic.BaseModel):
         return list(
             sorted(
                 [SchemaField(**field) for field in fields],  # type: ignore
-                key=lambda f: f.index
+                key=lambda f: f.index,
             )
         )
 
@@ -246,6 +253,7 @@ class SchemaModel(pydantic.BaseModel):
     Methods
     -------
     """
+
     def select_dtypes(
         self,
         include: Optional[Set[str]] = None,
@@ -265,12 +273,16 @@ class SchemaModel(pydantic.BaseModel):
                 ndtype = normalized_dtype(f.dtype)
 
                 # Filter anything explicitly listed in ``exclude``.
-                if f.dtype in exclude: continue
-                elif ndtype in exclude: continue
+                if f.dtype in exclude:
+                    continue
+                elif ndtype in exclude:
+                    continue
 
                 # Yield anything explicitly listed in ``include``.
-                elif f.dtype in include: yield (f.name, f)
-                elif ndtype in include: yield (f.name, f)
+                elif f.dtype in include:
+                    yield (f.name, f)
+                elif ndtype in include:
+                    yield (f.name, f)
 
         return dict(iterator())
 
@@ -280,10 +292,10 @@ def Schema(**definition: Dict[str, Any]) -> "SchemaModel":
     ``Schema``
     ==========
 
-    ``Schema`` is a factory function responsible for making instances of 
+    ``Schema`` is a factory function responsible for making instances of
     ``SchemaModels`` by additionally making ``SchemaFieldModels``,
     ``Checks``, and ``Constraints`` from the schema ``definition``.
-    
+
     """
     return SchemaModel.model_validate(definition)  # type: ignore
 

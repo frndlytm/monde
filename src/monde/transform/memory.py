@@ -1,8 +1,7 @@
 import pandas as pd
 import pandera as pa
 
-from monde.transform import abstract
-from monde.transform import mixins
+from monde.transform import abstract, mixins
 
 __all__ = ["MemoryOptimizer"]
 

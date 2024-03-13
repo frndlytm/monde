@@ -24,7 +24,6 @@ SqlDtypes = {
     "time": sql.TIME,
     # Extended dtypes (see schema.dtypes sub-module).
     "currency": sql.FLOAT,
-    "period": sql.DATE,
     "ssn": sql.TEXT,
     "zipcode": sql.TEXT,
 }
@@ -49,13 +48,20 @@ class TableBuilder(IBuilder[sql.Table]):
         )
 
     @classmethod
-    def build_constraint(cls, constraint: spec.schema.ConstraintModel) -> sql.Constraint:
+    def build_constraint(
+        cls,
+        constraint: spec.schema.ConstraintModel,
+    ) -> sql.Constraint | sql.Index:
+
         if constraint.type_ == "index":
             return sql.Index(constraint.name, *constraint.fields)
+
         elif constraint.type_ == "primary_key":
             return sql.PrimaryKeyConstraint(*constraint.fields, name=constraint.name)
+
         elif constraint.type_ == "unique":
             return sql.UniqueConstraint(*constraint.fields, name=constraint.name)
+
         else:
             raise ValueError(f"'{constraint.type_}' is not a valid ConstraintType.")
 
@@ -70,10 +76,10 @@ class TableBuilder(IBuilder[sql.Table]):
         """
         # Map the builder over the schema.fields...
         __columns__ = list(map(cls.build_field, schema.fields))
-        
+
         # Map the builder over the schema.constraints...
         __constraints__ = list(map(cls.build_constraint, schema.constraints))
-        
+
         # Make a Table
         return sql.Table(*args, *__columns__, *__constraints__, **kwargs)
 
