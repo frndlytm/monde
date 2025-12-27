@@ -52,7 +52,6 @@ class TableBuilder(IBuilder[sql.Table]):
         cls,
         constraint: spec.schema.ConstraintModel,
     ) -> sql.Constraint | sql.Index:
-
         if constraint.type_ == "index":
             return sql.Index(constraint.name, *constraint.fields)
 

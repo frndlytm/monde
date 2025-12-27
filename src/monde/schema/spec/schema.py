@@ -259,7 +259,6 @@ class SchemaModel(pydantic.BaseModel):
         include: Optional[Set[str]] = None,
         exclude: Optional[Set[str]] = None,
     ) -> Dict[str, SchemaFieldModel]:
-
         assert (include, exclude) != (None, None)
         include = set(include or [])
         exclude = set(exclude or [])

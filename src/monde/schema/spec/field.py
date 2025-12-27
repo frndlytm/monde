@@ -152,7 +152,7 @@ class SchemaFieldModel(pydantic.BaseModel, Generic[T]):
     default: Optional[T] = pydantic.Field(
         default=None,
         description=(
-            "The default value, parseable as the generic type-var of the " "subclass."
+            "The default value, parseable as the generic type-var of the subclass."
         ),
     )
 
@@ -179,8 +179,7 @@ class SchemaFieldModel(pydantic.BaseModel, Generic[T]):
     required: bool = pydantic.Field(
         default=False,
         description=(
-            "Value must be provided during validation, even if it's "
-            "None / NULL / NaN."
+            "Value must be provided during validation, even if it's None / NULL / NaN."
         ),
     )
     nullable: bool = pydantic.Field(
@@ -190,7 +189,7 @@ class SchemaFieldModel(pydantic.BaseModel, Generic[T]):
     protect: bool = pydantic.Field(
         default=False,
         description=(
-            "Value must be protected with higher security, like " "encryption at rest."
+            "Value must be protected with higher security, like encryption at rest."
         ),
     )
     exclude: bool = pydantic.Field(
